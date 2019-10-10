@@ -4,25 +4,19 @@
 #include <algorithm>
 
 int main() {
-    Vector<std::ofstream *> streams;
-    const int numStreams = 10;
-
-    for (int i = 0; i < numStreams; i++) {
-        std::ofstream *out = new std::ofstream;
-        std::string fileName = std::to_string(i);
-        out->open(fileName.c_str());
-        streams.push_back(out);
+    Vector<std::ofstream> streams;
+    for (int i = 1; i < 11; i++) {
+        std::string name = std::to_string(i) + ".txt";
+        std::ofstream outStream(name);
+        streams.push_back(outStream);
     }
-
     shuffle(streams.begin(), streams.end(), std::random_device());
-
-    int i = 0;
-    for (auto stream : streams) {
-        (*stream) << i;
-        stream->close();
-        delete stream;
-        i++;
+    int j = 1;
+    std::cout << streams.size() << std::endl;
+    for (auto &currentStream: streams) {
+        currentStream << j;
+        currentStream.close();
+        j++;
     }
-
     return 0;
 }

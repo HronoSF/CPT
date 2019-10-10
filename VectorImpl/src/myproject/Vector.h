@@ -6,7 +6,7 @@ public:
     typedef TYPE* iterator;
     // CONSTRUCTORS:
     Vector();  // default constructor
-    Vector(const int size); // constructor with initial size
+    explicit Vector(const int size); // constructor with initial size
     Vector(const TYPE &init, const int size);  // constructor with initial element and initial size
     Vector(const Vector<TYPE> &other); // copy constructor
     Vector(Vector<TYPE> &&other) noexcept; // move constructor
@@ -21,8 +21,9 @@ public:
     void resize(unsigned int size);
     void grow(int reserve);
     // METHODS:
-    void push_back(const TYPE &value);
-    TYPE pop_back();
+    void push_back(TYPE &value);
+    void push_back(TYPE &&value);
+    void pop_back();
     void erase();
     void swap(Vector<TYPE> & other);
     // ITERATOR:
@@ -35,7 +36,6 @@ private:
     int __capacity;
     int __size;
     const int DEFAULT_CAPACITY = 16;
-    void finalize(Vector<TYPE> &targetVector); // to util vector after move operation/constructor
 };
 
 #include "Vector.hxx"
