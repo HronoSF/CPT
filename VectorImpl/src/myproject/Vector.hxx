@@ -64,15 +64,15 @@ Vector<TYPE>::~Vector() {
 
 template<class TYPE>
 void Vector<TYPE>::push_back(TYPE &value) {
-    if (__size > __capacity) {
-        grow(__capacity + __capacity / 3 + 1);
-    }
-    elementData[__size++] = std::move(value);
+    push_back(std::forward<TYPE>(value));
 }
 
 template<class TYPE>
 void Vector<TYPE>::push_back(TYPE &&value) {
-    push_back(std::forward<TYPE>(value));
+    if (__size > __capacity) {
+        grow(__capacity + __capacity / 3 + 1);
+    }
+    elementData[__size++] = std::move(value);
 }
 
 
