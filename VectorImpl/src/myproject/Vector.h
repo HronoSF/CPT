@@ -18,7 +18,6 @@ public:
     // STAFF METHODS:
     unsigned int capacity() const;
     unsigned int size() const;
-    void resize(unsigned int size);
     void grow(int reserve);
     // METHODS:
     void push_back(TYPE &value);
@@ -26,16 +25,18 @@ public:
     void pop_back();
     void clear();
     void swap(Vector<TYPE> & other);
+    TYPE& front();
+    TYPE& back();
     // ITERATOR:
     iterator begin();
     iterator end();
-    TYPE& front();
-    TYPE& back();
+    iterator erase(iterator position);
 private:
     TYPE *elementData;
     int __capacity;
     int __size;
     const int DEFAULT_CAPACITY = 16;
+    void ensureCapacity();
 };
 
 #include "Vector.hxx"
