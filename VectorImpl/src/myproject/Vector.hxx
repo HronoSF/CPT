@@ -103,10 +103,10 @@ void Vector<TYPE>::pop_back() {
 }
 
 template<class TYPE>
-void Vector<TYPE>::erase() {
+void Vector<TYPE>::clear() {
     __capacity = 0;
     __size = 0;
-    elementData = 0;
+    delete[] elementData;
 }
 
 template<typename T>

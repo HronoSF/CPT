@@ -24,7 +24,7 @@ public:
     void push_back(TYPE &value);
     void push_back(TYPE &&value);
     void pop_back();
-    void erase();
+    void clear();
     void swap(Vector<TYPE> & other);
     // ITERATOR:
     iterator begin();

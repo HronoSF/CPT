@@ -12,7 +12,6 @@ int main() {
     }
     shuffle(streams.begin(), streams.end(), std::random_device());
     int j = 1;
-    std::cout << streams.size() << std::endl;
     for (auto &currentStream: streams) {
         currentStream << j;
         currentStream.close();
