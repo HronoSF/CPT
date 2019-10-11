@@ -94,8 +94,7 @@ void Vector<TYPE>::grow(int reserve) {
 
 template<class TYPE>
 void Vector<TYPE>::pop_back() {
-    __size--;
-    elementData[__size];
+    erase(end());
 }
 
 template<class TYPE>
