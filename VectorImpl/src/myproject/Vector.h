@@ -31,6 +31,7 @@ public:
     iterator begin();
     iterator end();
     iterator erase(iterator position);
+    iterator erase(iterator first,iterator second);
 private:
     TYPE *elementData;
     int __capacity;

@@ -132,9 +132,26 @@ typename Vector<TYPE>::iterator Vector<TYPE>::end() { return (elementData + __si
 template<typename T>
 typename Vector<T>::iterator Vector<T>::erase(iterator position) {
     iterator iter = &elementData[position - elementData];
+    iter->~T();
     memmove(iter, iter + 1, __size - (iter - elementData));
     __size -= 1;
     return iter;
+}
+
+template<typename T>
+typename Vector<T>::iterator Vector<T>::erase(iterator first, iterator last) {
+    int size = last - first;
+    iterator iter_first = &elementData[first - elementData];
+    iterator iter_last = iter_first + size;
+    if (size == 0) {
+        return iter_first;
+    }
+    for (int i = 0; i < size; i++) {
+        first++->~T();
+    }
+    memmove(iter_first, iter_last, __size - (iter_last - elementData));
+    __size -= size;
+    return iter_first;
 }
 
 template<class TYPE>
