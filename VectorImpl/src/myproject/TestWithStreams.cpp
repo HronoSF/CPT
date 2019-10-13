@@ -6,9 +6,8 @@
 int main() {
     Vector<std::ofstream> streams;
     for (int i = 1; i < 11; i++) {
-        std::string name = std::to_string(i) + ".txt";
-        std::ofstream outStream(name);
-        streams.push_back(outStream);
+        std::string nameOfCurrentStream = std::to_string(i) + ".txt";
+        streams.push_back(std::ofstream(nameOfCurrentStream));
     }
     shuffle(streams.begin(), streams.end(), std::random_device());
     int j = 1;

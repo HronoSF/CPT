@@ -68,13 +68,13 @@ Vector<TYPE>::~Vector() {
 template<class TYPE>
 void Vector<TYPE>::push_back(TYPE &value) {
     ensureCapacity();
-    elementData[__size++] = std::move(value);
+    elementData[__size++] = value;
 }
 
 template<class TYPE>
 void Vector<TYPE>::push_back(TYPE &&value) {
     ensureCapacity();
-    elementData[__size++] = value;
+    elementData[__size++] = std::move(value);
 }
 
 
@@ -84,9 +84,7 @@ void Vector<TYPE>::grow(int reserve) {
         return;
     }
     TYPE *tmp_elementData = new TYPE[reserve];
-    for (int i = 0; i < __size; ++i) {
-        tmp_elementData[i] = std::move(elementData[i]);
-    }
+    memmove(tmp_elementData, elementData, __size);
     __capacity = reserve;
     delete[] elementData;
     elementData = tmp_elementData;
@@ -119,7 +117,6 @@ void Vector<TYPE>::ensureCapacity() {
     }
 }
 
-
 template<class TYPE>
 unsigned int Vector<TYPE>::capacity() const { return __capacity; }
 
@@ -135,7 +132,7 @@ typename Vector<TYPE>::iterator Vector<TYPE>::end() { return (elementData + __si
 template<typename T>
 typename Vector<T>::iterator Vector<T>::erase(iterator position) {
     iterator iter = &elementData[position - elementData];
-    memcpy(iter, iter + 1, __size - (iter - elementData));
+    memmove(iter, iter + 1, __size - (iter - elementData));
     __size -= 1;
     return iter;
 }
