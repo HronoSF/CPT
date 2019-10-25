@@ -5,16 +5,16 @@
 
 int main() {
     Vector<std::ofstream> streams;
-    for (int i = 1; i < 11; i++) {
+    for (int i = 0; i < 10; i++) {
         std::string nameOfCurrentStream = std::to_string(i) + ".txt";
         streams.push_back(std::ofstream(nameOfCurrentStream));
     }
     shuffle(streams.begin(), streams.end(), std::random_device());
-    int j = 1;
+    int j = 0;
     for (auto &currentStream: streams) {
         currentStream << j;
         currentStream.close();
-        j++;
+        ++j;
     }
     return 0;
 }

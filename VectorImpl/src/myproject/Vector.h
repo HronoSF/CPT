@@ -18,7 +18,6 @@ public:
     // STAFF METHODS:
     unsigned int capacity() const;
     unsigned int size() const;
-    void grow(int reserve);
     // METHODS:
     void push_back(TYPE &value);
     void push_back(TYPE &&value);
@@ -38,6 +37,7 @@ private:
     int __size;
     const int DEFAULT_CAPACITY = 16;
     void ensureCapacity();
+    void grow(int reserve);
 };
 
 #include "Vector.hxx"

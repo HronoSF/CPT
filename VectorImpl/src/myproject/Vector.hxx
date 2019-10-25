@@ -50,7 +50,8 @@ Vector<TYPE> &Vector<TYPE>::operator=(const Vector<TYPE> &otherVector) {
     delete elementData;
     __capacity = otherVector._capacity;
     __size = otherVector.__size;
-    memcpy(this->elementData, otherVector.elementData, this->__capacity);
+    TYPE *tmp_copyData = memmove(this->elementData, otherVector.elementData, this->__capacity);
+    swap(tmp_copyData);
     return *this;
 }
 
@@ -84,7 +85,9 @@ void Vector<TYPE>::grow(int reserve) {
         return;
     }
     TYPE *tmp_elementData = new TYPE[reserve];
-    memmove(tmp_elementData, elementData, __size);
+    for (int i = 0; i < reserve; ++i) {
+        tmp_elementData[i] = std::move(elementData[i]);
+    }
     __capacity = reserve;
     delete[] elementData;
     elementData = tmp_elementData;
@@ -132,26 +135,34 @@ typename Vector<TYPE>::iterator Vector<TYPE>::end() { return (elementData + __si
 template<typename TYPE>
 typename Vector<TYPE>::iterator Vector<TYPE>::erase(iterator position) {
     iterator iter = &elementData[position - elementData];
-    iter->~TYPE();
-    memmove(iter, iter + 1, (__size - (iter - elementData)) * sizeof(TYPE));
+    while (position < end()) {
+        *iter = std::move(*(++position));
+        ++iter;
+    }
     __size -= 1;
-    return iter;
+    iter->~TYPE();
+    return iter + 1;
 }
 
 template<typename TYPE>
 typename Vector<TYPE>::iterator Vector<TYPE>::erase(iterator first, iterator last) {
     int size = last - first;
-    iterator iter_first = &elementData[first - elementData];
-    iterator iter_last = iter_first + size;
+    iterator iter = &elementData[first - elementData];
+    iterator iter_last = iter + size;
     if (size == 0) {
-        return iter_first;
+        return iter;
     }
-    for (int i = 0; i < size; i++) {
-        first++->~TYPE();
+    while (iter_last < end()) {
+        *iter = std::move(*(++iter_last));
+        ++iter;
     }
-    memmove(iter_first, iter_last, (__size - (iter_last - elementData)) * sizeof(TYPE));
+
+    while (iter_last < end()) {
+        iter->~TYPE();
+        ++iter;
+    }
     __size -= size;
-    return iter_first;
+    return iter_last;
 }
 
 template<class TYPE>
@@ -164,6 +175,8 @@ template<class T>
 void swap(Vector<T> &firstVector, Vector<T> &secondVector) {
     firstVector.swap(secondVector);
 }
+
+
 
 
 
