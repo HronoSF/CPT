@@ -47,11 +47,8 @@ Vector<TYPE>::Vector(Vector<TYPE> &&otherVector) noexcept {
 
 template<class TYPE>
 Vector<TYPE> &Vector<TYPE>::operator=(const Vector<TYPE> &otherVector) {
-    delete elementData;
-    __capacity = otherVector._capacity;
-    __size = otherVector.__size;
-    TYPE *tmp_copyData = memmove(this->elementData, otherVector.elementData, this->__capacity);
-    swap(tmp_copyData);
+    auto copy = otherVector;
+    swap(otherVector);
     return *this;
 }
 
@@ -67,7 +64,7 @@ Vector<TYPE>::~Vector() {
 }
 
 template<class TYPE>
-void Vector<TYPE>::push_back(TYPE &value) {
+void Vector<TYPE>::push_back(const TYPE &value) {
     ensureCapacity();
     elementData[__size++] = value;
 }
@@ -95,7 +92,7 @@ void Vector<TYPE>::grow(int reserve) {
 
 template<class TYPE>
 void Vector<TYPE>::pop_back() {
-    erase(end());
+    erase(end()-1);
 }
 
 template<class TYPE>
@@ -135,13 +132,14 @@ typename Vector<TYPE>::iterator Vector<TYPE>::end() { return (elementData + __si
 template<typename TYPE>
 typename Vector<TYPE>::iterator Vector<TYPE>::erase(iterator position) {
     iterator iter = &elementData[position - elementData];
+    auto afterDeleteIter = position + 1;
     while (position < end()) {
         *iter = std::move(*(++position));
         ++iter;
     }
     __size -= 1;
     iter->~TYPE();
-    return iter + 1;
+    return afterDeleteIter;
 }
 
 template<typename TYPE>

@@ -19,7 +19,7 @@ public:
     unsigned int capacity() const;
     unsigned int size() const;
     // METHODS:
-    void push_back(TYPE &value);
+    void push_back(const TYPE& value);
     void push_back(TYPE &&value);
     void pop_back();
     void clear();
