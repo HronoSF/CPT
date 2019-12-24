@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/5.dir/src/myproject/main.cpp.o CMakeFiles/5.dir/src/test/MergeSortTest.cpp.o  -o 5 /usr/lib/libgtest.a /usr/lib/libgtest_main.a -lpthread 

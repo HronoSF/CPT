@@ -1,4 +1,0 @@
-/home/gleb/.IDE/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/gleb/Desktop/SP_2019/5
--- Configuring done
--- Generating done
--- Build files have been written to: /home/gleb/Desktop/SP_2019/5/cmake-build-debug
