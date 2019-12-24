@@ -5,17 +5,16 @@
 #include <string>
 #include <sstream>
 
-TEST(MyMessage, SizeFalse) {
-    EXPECT_FALSE(message(std::cout, "% + % = %", "a", 1));
-    EXPECT_FALSE(message(std::cout, "% + % = %", "a", 1, 3.0, 4.5));
+TEST(message, basicTest) {
+    char ans[] = "a + 5 = 10";
+    std::stringstream ss;
+    message(ss, "% + % = %", 'a', 5, 10.0);
+    EXPECT_EQ(ans, ss.str());
 }
 
-TEST(MyMessage, String) {
-    std::stringstream strStreamOut;
-
-    message(strStreamOut, "% + % = %", "a", 1, 3.0);
-
-    std::string strOut = strStreamOut.str();
-    std::string str2 = "a + 1 = 3";
-    EXPECT_EQ(strOut, str2);
+TEST(message, unequalityOfPercentsTest) {
+    char ans[] = "a + 5 = 10";
+    std::stringstream ss;
+    message(ss, "% + % = %%% %", 'a', 5, 10.0);
+    EXPECT_EQ(ans, ss.str());
 }
