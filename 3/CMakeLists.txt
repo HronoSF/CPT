@@ -13,7 +13,7 @@ include_directories(
         ${GTEST_INCLUDE_DIRS}
 )
 
-add_executable(3 src/myproject/MyMessage.h src/myproject/MyTie.h src/myproject/MyCat.h src/test/MyCatTest.cpp src/test/MyTieTest.cpp src/test/MyMessageTest.cpp src/myproject/MyCat1.h)
+add_executable(3 src/myproject/MyMessage.h src/myproject/MyTie.h src/myproject/MyCat.h src/test/MyCatTest.cpp src/test/MyTieTest.cpp src/test/MyMessageTest.cpp)
 
 target_link_libraries(3 ${GTEST_BOTH_LIBRARIES} Threads::Threads)
 
