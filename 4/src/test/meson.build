@@ -19,3 +19,13 @@ test(
         dependencies: [gtest]
     )
 )
+
+test(
+    'GuardTest',
+    executable(
+        'GuardTest',
+        sources: ['GuardTest.cpp'],
+        include_directories: src,
+        dependencies: [gtest]
+    )
+)
