@@ -14,7 +14,7 @@ include_directories(
 )
 
 
-add_executable(10 src/myproject/TurnOn.h src/test/TurnOnTest.cpp src/test/TurnOnTest.hxx)
+add_executable(10 src/myproject/TurnOn.h src/test/TurnOnTest.cpp)
 
 target_link_libraries(10 ${GTEST_BOTH_LIBRARIES} Threads::Threads)
 

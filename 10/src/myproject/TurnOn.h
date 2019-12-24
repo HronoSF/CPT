@@ -1,38 +1,30 @@
 #include <vector>
+#include <unordered_set>
 
-namespace turnOn{
-    template <typename T>
-    void turnOn90dClockwise(std::vector<T>& vec, int n){
-        for(int i = 0; i<n; i++){
-            T a = vec[1];
-            vec[1] = -vec[0];
-            vec[0] = a;
-        }
+namespace turnOn {
+
+    template<typename T>
+    void CounterClockwise(std::vector<T> &vec, int n) {
+        vec[1] = -vec[1];
+        std::swap(vec[0], vec[1]);
     }
 
-    template <typename T>
-    void turnOn90dCounterClockwise(std::vector<T>& vec, int n){
-        for(int i = 0; i<n; i++){
-            T a = vec[0];
-            vec[0] = -vec[1];
-            vec[1] = a;
-        }
+    template<typename T>
+    void Clockwise(std::vector<T> &vec, int n) {
+        vec[0] = -vec[0];
+        std::swap(vec[0], vec[1]);
     }
 }
 
-template <typename T>
-bool turnOn90deg(std::vector<T>& vec, int deg){
-    if (vec.size()>2)
+template<typename T>
+bool turnOnVector(std::vector<T> &vec, int angle) {
+    if (vec.size() > 2 || angle % 90 > 0) {
         return false;
+    }
 
-    if (deg%90>0)
-        return false;
+    int n = angle / 90;
 
-    int n = deg/90;
-    if(n>0)
-        turnOn::turnOn90dClockwise(vec, n);
-    else
-        turnOn::turnOn90dCounterClockwise(vec, -1 * n);
+    n > 0 ? turnOn::Clockwise(vec, n) : turnOn::CounterClockwise(vec, -1 * n);
 
     return true;
 }
