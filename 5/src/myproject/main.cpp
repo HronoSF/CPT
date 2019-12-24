@@ -1,5 +1,3 @@
-#include <iostream>
-#include <numeric>
 #include "MyIterator.h"
 #include "MergeSort.h"
 

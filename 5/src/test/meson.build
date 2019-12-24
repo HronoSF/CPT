@@ -8,3 +8,21 @@ test(
         dependencies: [gtest]
     )
 )
+test(
+    'MyIteratorTest',
+    executable(
+        'MyIteratorTest',
+        sources: ['MyIteratorTest.cpp'],
+        include_directories: src,
+        dependencies: [gtest]
+    )
+    )
+test(
+    'PersonAccountTest',
+    executable(
+        'PersonAccountTest',
+        sources: ['PersonAccountTest.cpp'],
+        include_directories: src,
+        dependencies: [gtest]
+    )
+)

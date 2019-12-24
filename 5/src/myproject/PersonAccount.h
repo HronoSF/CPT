@@ -1,15 +1,15 @@
 #include <string>
 
-namespace My{
-    struct Person{
+namespace Person {
+    struct Account {
         int id;
         std::string first_name, last_name;
 
-        bool operator==(const Person& p) const{
+        bool operator==(const Account &p) const {
             return id == p.id;
         }
 
-        bool operator<(Person const & other) const {
+        bool operator<(Account const &other) const {
             return to_string() < other.to_string();
         }
 
@@ -23,13 +23,13 @@ namespace My{
     };
 }
 
-namespace std{
-
+namespace std {
     template<>
-    struct hash<My::Person>{
+    struct hash<Person::Account> {
         typedef size_t result_type;
-        typedef My::Person argument_type;
-        result_type operator()(const argument_type& x) const{
+        typedef Person::Account argument_type;
+
+        result_type operator()(const argument_type &x) const {
             return static_cast<result_type>(x.getId());
         }
     };
