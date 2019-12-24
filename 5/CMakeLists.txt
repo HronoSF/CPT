@@ -15,8 +15,8 @@ include_directories(
         ${GTEST_INCLUDE_DIRS}
 )
 
-add_executable(5 src/myproject/Iterator.h src/myproject/MergeSort.h
-        src/myproject/main.cpp src/test/MergeSortTest.cpp)
+add_executable(5 src/myproject/MyIterator.h src/myproject/MergeSort.h
+        src/myproject/main.cpp src/test/MergeSortTest.cpp src/myproject/PersonAcc.h)
 
 target_link_libraries(5 ${GTEST_BOTH_LIBRARIES} Threads::Threads)
 
