@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/gleb/Desktop/SP_2019/5/src/myproject/Iterator.h
+ostream
+-
+
+/home/gleb/Desktop/SP_2019/5/src/myproject/MergeSort.h
+iostream
+-
+typeinfo
+-
+
+/home/gleb/Desktop/SP_2019/5/src/myproject/main.cpp
+iostream
+-
+vector
+-
+Iterator.h
+/home/gleb/Desktop/SP_2019/5/src/myproject/Iterator.h
+MergeSort.h
+/home/gleb/Desktop/SP_2019/5/src/myproject/MergeSort.h
+

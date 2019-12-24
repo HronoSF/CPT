@@ -1,0 +1,4 @@
+/home/gleb/Desktop/SP_2019/5/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/gleb/Desktop/SP_2019/5/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/gleb/Desktop/SP_2019/5/cmake-build-debug/CMakeFiles/5.dir
+/home/gleb/Desktop/SP_2019/5/cmake-build-debug/CMakeFiles/test.dir

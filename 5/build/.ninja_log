@@ -1,0 +1,5 @@
+# ninja log v5
+0	987	1577126065	src/myproject/myproject@exe/main.cpp.o	85cc7ac2459f3e97
+988	1225	1577126065	src/myproject/myproject	e95988a508f71900
+1	2292	1577126066	src/test/merge_sort_test@exe/MergeSortTest.cc.o	c8548572ae3b5f8d
+2293	2695	1577126067	src/test/merge_sort_test	bffc2f9fd4579541
