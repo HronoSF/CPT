@@ -4,12 +4,11 @@
 #include "MergeSort.h"
 #include "resources/matplotlibcpp.h"
 
-
 namespace plt = matplotlibcpp;
 
 int main() {
     std::vector<long> yGraphicMultiThreading, yGraphicConsistent, xGraphics;
-    for (int size = 10; size < 1000000; size *= 5) {
+    for (int size = 10; size < 10000000; size *= 6) {
         vector<int> vector(size);
         for (int i = 0; i < size; i++) {
             vector[i] = rand();
@@ -21,9 +20,10 @@ int main() {
 
     plt::named_plot("Merge sort with Multithreading (ms)", xGraphics, yGraphicMultiThreading);
     plt::named_plot("Merge sort Consistent (ms)", xGraphics, yGraphicConsistent );
+    plt::xlabel("Count of elements in array");
+    plt::ylabel("Time to sort in ms");
     plt::legend();
     plt::show();
 
     return 0;
 }
-
