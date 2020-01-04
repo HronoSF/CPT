@@ -4,58 +4,70 @@
 #include <vector>
 #include <algorithm>
 #include <thread>
-#include <math.h>
+#include <cmath>
 #include <iostream>
+#include <mutex>
+#include "../myproject/resources/MergeSort.h"
 
-
-
-using namespace std;
 using namespace std::chrono;
 
-int threadCount = std::thread::hardware_concurrency();
-int maxDepth = floor(log(threadCount) / log(2));
+#define THREAD_MAX std::thread::hardware_concurrency()
 
-void MergeSortInThreads(std::vector<int>::iterator first, std::vector<int>::iterator last, int depth) {
-    if (last - first > 1) {
+std::vector<std::thread> threads{THREAD_MAX};
 
-        auto middle = first + (last - first) / 2;
+std::mutex mutex;
 
-        if (depth < maxDepth) {
-            thread t1 = thread(MergeSortInThreads, first, middle, depth + 1);
-            thread t2 = thread(MergeSortInThreads, middle, last, depth + 1);
-            t1.join();
-            t2.join();
-        } else {
-            MergeSortInThreads(first, middle, depth + 1);
-            MergeSortInThreads(middle, last, depth + 1);
+template<typename T>
+void merge_sort_in_threads(T first, T last) {
+
+    int size = std::distance(first, last);
+
+    if (first == last || size == 1) {
+        return;
+    }
+
+    T middle = std::next(first, size / 2);
+
+    unsigned int i = THREAD_MAX;
+    unsigned int j = THREAD_MAX;
+
+    if (size >= 100) {
+        std::lock_guard<std::mutex> locked(mutex);
+        i = 0;
+        while (i < THREAD_MAX) {
+            if (!threads[i].joinable()) {
+                threads[i] = std::thread{merge_sort_in_threads<T>, first, middle};
+                break;
+            }
+            i++;
         }
-        std::inplace_merge(first, middle, last);
+        j = 0;
+        while (j < THREAD_MAX) {
+            if (!threads[j].joinable()) {
+                threads[j] = std::thread{merge_sort_in_threads<T>, middle, last};
+                break;
+            }
+            j++;
+        }
     }
+    (i == THREAD_MAX) ? merge_sort_in_threads(first, middle) : threads[i].join();
+    (j == THREAD_MAX) ? merge_sort_in_threads(middle, last) : threads[j].join();
+    std::inplace_merge(first, middle, last);
 }
 
-void MergeSortConsistent(std::vector<int>::iterator first, std::vector<int>::iterator last) {
-    if (last - first > 1) {
 
-        auto middle = first + (last - first) / 2;
-
-        MergeSortConsistent(first, middle);
-        MergeSortConsistent(middle, last);
-
-        std::inplace_merge(first, middle, last);
-    }
-}
-
-long MergeSortInThreads(std::vector<int> &vec) {
+long merge_sort_in_threads(std::vector<int> &vec) {
     auto start = system_clock::now();
-    MergeSortInThreads(vec.begin(), vec.end(), 1);
+    merge_sort_in_threads(vec.begin(), vec.end());
     auto end = system_clock::now();
     milliseconds elapsed = duration_cast<milliseconds>(end - start);
     return elapsed.count();
 }
 
-long MergeSortConsistent(std::vector<int> &vec) {
+
+long merge_sort_consistent(std::vector<int> &vec) {
     auto start = system_clock::now();
-    MergeSortConsistent(vec.begin(), vec.end());
+    merge_sort(vec.begin(), vec.end());
     auto end = system_clock::now();
     milliseconds elapsed = duration_cast<milliseconds>(end - start);
     return elapsed.count();

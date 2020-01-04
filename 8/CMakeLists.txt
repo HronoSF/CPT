@@ -16,7 +16,8 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++11 -I/usr/include/python2.7 -lpython2.7")
 
-add_executable(8 src/myproject/MergeSort.h src/myproject/main.cpp src/myproject/resources/matplotlibcpp.h ${SOURCE_FILES} src/test/MergeSortTest.cpp)
+add_executable(8 src/myproject/MergeSort.h src/myproject/main.cpp src/myproject/resources/matplotlibcpp.h ${SOURCE_FILES} src/test/MergeSortTest.cpp
+        src/myproject/resources/MergeSort.h)
 
 target_link_libraries(8 ${PYTHON_LIBRARIES})
 
