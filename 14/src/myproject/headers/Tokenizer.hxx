@@ -12,12 +12,11 @@ class Tokenizer {
 
 private:
     vector<string> tokens;
-
     int token_num;
-    bool quote;
+    bool is_quote;
 
 public:
     vector<string> tokenize(const string& line);
 
-    static vector<string> clean_spaces(vector<string> line);
+    static vector<string> clear_spaces(vector<string> line);
 };

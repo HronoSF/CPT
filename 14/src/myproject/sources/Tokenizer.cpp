@@ -3,16 +3,16 @@
 vector<string> Tokenizer::tokenize(const string &line) {
     tokens = {""};
     token_num = 0;
-    quote = false;
+    is_quote = false;
     for (char i : line) {
-        if (!quote && (i == '\"' || i == '\'')) {
-            quote = true;
-        } else if (quote && (i == '\"' || i == '\'')) {
-            quote = false;
-        } else if (!quote && i == ' ') {
+        if (!is_quote && (i == '\"' || i == '\'')) {
+            is_quote = true;
+        } else if (is_quote && (i == '\"' || i == '\'')) {
+            is_quote = false;
+        } else if (!is_quote && i == ' ') {
             tokens.emplace_back("");
             token_num++;
-        } else if (!quote && (i == '<' || i == '>' || i == '|')) {
+        } else if (!is_quote && (i == '<' || i == '>' || i == '|')) {
             tokens.emplace_back(1, i);
             tokens.emplace_back("");
             token_num += 2;
@@ -20,12 +20,12 @@ vector<string> Tokenizer::tokenize(const string &line) {
             tokens[token_num] = tokens[token_num] + i;
         }
     }
-    tokens = clean_spaces(tokens);
+    tokens = clear_spaces(tokens);
     return tokens;
 }
 
-vector<string> Tokenizer::clean_spaces(vector<string> line) {
-    for (int i = 0; i < line.size(); i++) {
+vector<string> Tokenizer::clear_spaces(vector<string> line) {
+    for (unsigned long i = 0; i < line.size(); i++) {
         if (line[i].empty()) {
             line.erase(line.begin() + i);
         }

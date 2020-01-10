@@ -39,15 +39,15 @@ private:
 public:
     Shell() : usr(getenv("USER")), isPipe(false), bg_process(false), redirect(false), run(true) {}
 
-    void execute(bool usr_prompt);
+    void execute();
 
     void redirect_input(int i);
 
     void redirect_output(int i);
 
-    void change_dir(vector<string> cmd);
+    void change_directory(vector<string> cmd);
 
-    void bg_handler();
+    void back_ground_handler();
 
     void clear(char **&cmd, int &i);
 

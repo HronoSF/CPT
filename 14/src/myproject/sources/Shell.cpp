@@ -10,7 +10,7 @@ void handle(int signals) {
     pids.erase(remove(pids.begin(), pids.end(), pid), pids.end());
 }
 
-void Shell::execute(bool usr_prompt) {
+void Shell::execute() {
     while (run) {
         size = 8;
         cmd = new char *[size];
@@ -31,11 +31,13 @@ void Shell::execute(bool usr_prompt) {
 
         getline(cin, input_command);
         tokens = tokenizer.tokenize(input_command);
-        if (tokens[0] == "exit") {
+        if (tokens.empty()) {
+            continue;
+        } else if (tokens[0] == "exit") {
             cout << "Quitting shell...\n";
             run = false;
         } else if (tokens[0] == "cd") {
-            change_dir(tokens);
+            change_directory(tokens);
         }
         for (int i = 0; i < tokens.size(); i++) {
             if (tokens[i] == "<") {
@@ -60,7 +62,7 @@ void Shell::execute(bool usr_prompt) {
         } else if (pid < 0) {
             perror("fork");
         } else {
-            bg_handler();
+            back_ground_handler();
             if (isPipe || redirect) {
                 if (close(pipefd[0]) < 0) {
                     perror("close");
@@ -123,29 +125,29 @@ void Shell::redirect_output(int i) {
     } else if (pid < 0) {
         perror("fork");
     } else {
-        bg_handler();
+        back_ground_handler();
     }
     fclose(file);
     clear(cmd, cmd_num);
 }
 
-void Shell::change_dir(vector<string> command) {
+void Shell::change_directory(vector<string> cmd) {
     current_dir = getcwd(curr_dir, 255);
-    if (command.size() == 1) {
+    if (cmd.size() == 1) {
         return;
-    } else if (command[1] == "..") {
+    } else if (cmd[1] == "..") {
         if (current_dir.find_last_of('/') != '\0') {
             current_dir = string(curr_dir).substr(0, current_dir.find_last_of('/'));
         }
-    } else if (command[1].find('/') == 0) {
-        current_dir = command[1];
+    } else if (cmd[1].find('/') == 0) {
+        current_dir = cmd[1];
     } else {
-        current_dir = current_dir + "/" + command[1];
+        current_dir = current_dir + "/" + cmd[1];
     }
     chdir(current_dir.c_str());
 }
 
-void Shell::bg_handler() {
+void Shell::back_ground_handler() {
     if (!bg_process) {
         status = waitpid(pid, nullptr, WUNTRACED);
     } else {
