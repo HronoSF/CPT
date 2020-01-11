@@ -12,9 +12,9 @@ find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I/usr/include/python2.7 -lpython2.7")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++11 -I/usr/include/python2.7 -lpython2.7")
 
-add_executable(11 src/myproject/MyThread.hxx src/test/MyThreadTest.cpp)
+add_executable(11 src/myproject/main.cpp src/myproject/MyThread.hxx src/test/MyThreadTest.cpp src/myproject/resources/MergeSortThreaded.h src/myproject/resources/matplotlibcpp.h src/myproject/resources/MergeSort.h src/test/MergeSortTest.cpp)
 
 target_link_libraries(11 ${PYTHON_LIBRARIES})
 

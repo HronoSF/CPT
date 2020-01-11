@@ -5,4 +5,5 @@ project (
     meson_version: '>=0,46', # минимальнаподдерживаемая версия meson
     default_options: ['cpp_std=c++11'] # используемый стандарт С++
 )
+
 subdir('src')
