@@ -45,10 +45,11 @@ void Shell::execute() {
         } else if (tokens[0] == "exit") {
             cout << "Quitting shell...\n";
             run = false;
+            continue;
         } else if (tokens[0] == "cd") {
             change_directory(tokens);
+            continue;
         }
-
 
         for (int i = 0; i < tokens.size(); i++) {
             if (tokens[i] == "|") {
@@ -69,7 +70,7 @@ void Shell::execute() {
         CHECK(dup2(out, 1));
         CHECK(close(out));
         CHECK(pid = fork());
-        if (pid == 0 && execvp(cmd[0], cmd)==0) {
+        if (pid == 0) {
             CHECK(execvp(cmd[0], cmd));
         } else if (pid > 0) {
             back_ground_handler();
