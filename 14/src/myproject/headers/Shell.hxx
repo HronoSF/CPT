@@ -52,4 +52,6 @@ public:
     void clear(char **&cmd, int &i);
 
     char *line_to_char_array(string line);
+
+    void pipe_input();
 };

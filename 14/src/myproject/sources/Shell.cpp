@@ -2,11 +2,15 @@
 
 std::vector<pid_t> pids;
 
+#define CHECK(fun) \
+    if((fun) == -1) { \
+        throw std::system_error(errno, std::generic_category()); \
+}
+
 void handle(int signals) {
     int status;
     pid_t pid;
-    assert (signals == SIGCHLD);
-    pid = waitpid(-1, &status, WNOHANG);
+    CHECK(pid = waitpid(-1, &status, WNOHANG));
     pids.erase(remove(pids.begin(), pids.end(), pid), pids.end());
 }
 
@@ -30,6 +34,11 @@ void Shell::execute() {
         cout << "\033[1;31m[ " + usr + "@" + " ] " + ctime(&curr_time) + ">> \033[0m";
 
         getline(cin, input_command);
+
+        if (cin.eof()) {
+            break;
+        }
+
         tokens = tokenizer.tokenize(input_command);
         if (tokens.empty()) {
             continue;
@@ -39,8 +48,12 @@ void Shell::execute() {
         } else if (tokens[0] == "cd") {
             change_directory(tokens);
         }
+
+
         for (int i = 0; i < tokens.size(); i++) {
-            if (tokens[i] == "<") {
+            if (tokens[i] == "|") {
+                pipe_input();
+            } else if (tokens[i] == "<") {
                 redirect_input(i);
             } else if (tokens[i] == ">") {
                 redirect_output(i);
@@ -51,61 +64,48 @@ void Shell::execute() {
                 cmd[cmd_num++] = seg;
             }
         }
+
         cmd[cmd_num] = nullptr;
-        dup2(out, 1);
-        if (close(out) < 0) {
-            perror("close");
-        }
-        pid = fork();
-        if (pid == 0) {
-            execvp(cmd[0], cmd);
-        } else if (pid < 0) {
-            perror("fork");
-        } else {
+        CHECK(dup2(out, 1));
+        CHECK(close(out));
+        CHECK(pid = fork());
+        if (pid == 0 && tokens[0] != "cd") {
+            CHECK(execvp(cmd[0], cmd));
+        } else if (pid > 0) {
             back_ground_handler();
             if (isPipe || redirect) {
-                if (close(pipefd[0]) < 0) {
-                    perror("close");
-                }
+                CHECK(close(pipefd[0]));
             }
             cmd_num = 0;
             delete[] cmd;
         }
-        dup2(in, 0);
-        if (close(in) < 0) {
-            perror("close");
-        }
+        CHECK(dup2(in, 0));
+        CHECK(close(in));
     }
 }
 
 void Shell::redirect_input(int i) {
     cmd[cmd_num] = nullptr;
     if (cmd_num < tokens.size() - 2) {
-        pipe(pipefd);
+        CHECK(pipe(pipefd));
     }
-    pid = fork();
+    CHECK(pid = fork());
     if (pid == 0) {
-        int fds = open(tokens[++i].c_str(), O_RDONLY, 0);
-        dup2(fds, STDIN_FILENO);
-        if (close(fds) < 0) {
-            perror("close");
-        }
+        int fds;
+        CHECK(fds = open(tokens[++i].c_str(), O_RDONLY, 0));
+        CHECK(dup2(fds, STDIN_FILENO));
+        CHECK(close(fds))
         if (i < tokens.size() - 2) {
-            dup2(pipefd[1], 1);
-            if (close(pipefd[0]) < 0) {
-                perror("close");
-            }
+            CHECK(dup2(pipefd[1], 1));
+            CHECK(close(pipefd[0]))
         }
-        execvp(cmd[0], cmd);
-    } else if (pid < 0) {
-        perror("fork");
+        CHECK(execvp(cmd[0], cmd));
     } else {
-        status = waitpid(pid, nullptr, WUNTRACED);
+        CHECK(status = waitpid(pid, nullptr,
+                               WUNTRACED));
         if (i < tokens.size() - 2) {
-            if (close(pipefd[1]) < 0) {
-                perror("close");
-            }
-            dup2(pipefd[0], 0);
+            CHECK(close(pipefd[1]));
+            CHECK(dup2(pipefd[0], 0));
         }
     }
     redirect = true;
@@ -113,17 +113,14 @@ void Shell::redirect_input(int i) {
 }
 
 void Shell::redirect_output(int i) {
-    if (close(1) < 0) {
-        perror("close");
-    }
+    CHECK(close(1));
     cmd[cmd_num] = nullptr;
     FILE *file;
-    file = fopen(tokens[++i].c_str(), "w");
-    pid = fork();
+    file = fopen(tokens[++i].c_str(),
+                 "w");
+    CHECK(pid = fork());
     if (pid == 0) {
-        execvp(cmd[0], cmd);
-    } else if (pid < 0) {
-        perror("fork");
+        CHECK(execvp(cmd[0], cmd));
     } else {
         back_ground_handler();
     }
@@ -139,31 +136,57 @@ void Shell::change_directory(vector<string> cmd) {
         if (current_dir.find_last_of('/') != '\0') {
             current_dir = string(curr_dir).substr(0, current_dir.find_last_of('/'));
         }
-    } else if (cmd[1].find('/') == 0) {
+    } else if (
+            cmd[1].find('/') == 0) {
         current_dir = cmd[1];
     } else {
         current_dir = current_dir + "/" + cmd[1];
     }
-    chdir(current_dir.c_str());
+    CHECK(chdir(current_dir.c_str()));
 }
 
-void Shell::back_ground_handler() {
+void
+Shell::back_ground_handler() {
     if (!bg_process) {
-        status = waitpid(pid, nullptr, WUNTRACED);
+        CHECK(status = waitpid(pid, nullptr, WUNTRACED));
     } else {
         pids.push_back(pid);
         signal(SIGCHLD, handle);
     }
 }
 
-void Shell::clear(char **&cmd, int &cmd_num) {
+void
+Shell::pipe_input() {
+    if (!redirect) {
+        CHECK(pipe(pipefd));
+        CHECK(pid = fork());
+        if (pid == 0) {
+            CHECK(dup2(pipefd[1], 1));
+            CHECK(close(pipefd[0]))
+            cmd[cmd_num] = nullptr;
+            CHECK(execvp(cmd[0], cmd));
+        } else {
+            CHECK(status = waitpid(pid, nullptr, WUNTRACED));
+            CHECK(close(pipefd[1]))
+            CHECK(dup2(pipefd[0], 0));
+        }
+    } else {
+        redirect = false;
+    }
+    isPipe = true;
+    clear(cmd, cmd_num);
+}
+
+void
+Shell::clear(char **&cmd, int &cmd_num) {
     char **temp = new char *[size];
     delete[] cmd;
     cmd_num = 0;
     cmd = temp;
 }
 
-char *Shell::line_to_char_array(string line) {
+char *
+Shell::line_to_char_array(string line) {
     char *arr = new char[line.size() + 1];
     for (int i = 0; i < line.size(); i++) {
         arr[i] = line[i];
