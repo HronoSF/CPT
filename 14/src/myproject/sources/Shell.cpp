@@ -69,7 +69,7 @@ void Shell::execute() {
         CHECK(dup2(out, 1));
         CHECK(close(out));
         CHECK(pid = fork());
-        if (pid == 0 && tokens[0] != "cd") {
+        if (pid == 0 && tokens[0] != "cd" && tokens[0] != "exit") {
             CHECK(execvp(cmd[0], cmd));
         } else if (pid > 0) {
             back_ground_handler();
