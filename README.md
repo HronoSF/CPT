@@ -1,8 +1,4 @@
-# System programming.
+# System programming(c++ && Linux).
 
-
-## If in task are unit-tests to run it you should: ##
-1. cd "/path_to_folder_with_choosen_task"
-2. meason .build 
-3. cd .build 
-4. meson test
+## 1. C++: 2-8 задание
+## 2. Linux: 9,10,11,14 задания
