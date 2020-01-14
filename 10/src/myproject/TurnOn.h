@@ -5,14 +5,20 @@ namespace turnOn {
 
     template<typename T>
     void CounterClockwise(std::vector<T> &vec, int n) {
-        vec[1] = -vec[1];
-        std::swap(vec[0], vec[1]);
+        for(int i = 0; i<n; i++){
+            T tmp = vec[1];
+            vec[1] = -vec[0];
+            vec[0] = tmp;
+        }
     }
 
     template<typename T>
     void Clockwise(std::vector<T> &vec, int n) {
-        vec[0] = -vec[0];
-        std::swap(vec[0], vec[1]);
+        for(int i = 0; i<n; i++){
+            T tmp = vec[0];
+            vec[0] = -vec[1];
+            vec[1] = tmp;
+        }
     }
 }
 
