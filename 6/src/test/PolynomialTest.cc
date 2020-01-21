@@ -20,7 +20,7 @@ TEST(POLYNOMIAL, MULTIPLY_TEST) {
 TEST(POLYNOMIAL, SCHUR_TEST) {
     Polynomial<int> p(1, 2, 3);
 
-    Polynomial<int> schurPoly = schurTransform(std::move(p));
+    Polynomial<int> schurPoly = schurTransform(p);
 
     EXPECT_EQ(schurPoly.getArg(0), 0);
     EXPECT_EQ(schurPoly.getArg(1), 4);

@@ -82,7 +82,7 @@ constexpr bool is_complex() { return is_complex_t<T>::value; }
 
 template<class T>
 typename std::enable_if<std::is_arithmetic<T>::value, Polynomial<T>>::type
-schurTransform(Polynomial<T> p) {
+schurTransform(Polynomial<T> &p) {
 
     int size = p.getSize();
     T *array = new T[size];
